@@ -1,0 +1,18 @@
+{
+  "name": "bank-sampah",
+  "version": "1.0.0",
+  "description": "",
+  "author": "Kafi",
+  "private": true,
+  "workspaces": [
+    "APP/*"
+  ],
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build:app": "npm run build -w APP/BE && npm run build -w APP/FE",
+    "start:dev": "concurrently -n FrontEnd,BackEnd -c blue,red \"npm run dev -w APP/FE\" \"npm run start:dev -w APP/BE\""
+  },
+  "dependencies": {
+    "concurrently": "^9.2.4"
+  }
+}

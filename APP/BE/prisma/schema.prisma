@@ -1,0 +1,238 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Tenant {
+  id              String            @id @default(uuid()) @db.Uuid
+  appKey          String            @unique @map("app_key") @db.VarChar(100)
+  name            String            @db.VarChar(100)
+  email           String            @unique @db.VarChar(150)
+  password        String            @db.VarChar(255)
+  namaSiswa       String            @map("nama_siswa") @db.VarChar(100)
+  kelas           String            @db.VarChar(50)
+  namaApp         String            @map("nama_app") @db.VarChar(100)
+  createdAt       DateTime          @default(now()) @map("created_at")
+  updatedAt       DateTime          @updatedAt @map("updated_at")
+  deletedAt       DateTime?         @map("deleted_at")
+  admins          AdminBank[]
+  rewards         Reward[]
+  wasteCategories WasteCategory[]
+  customers       Customer[]
+  redemptions     PointRedemption[]
+  deposits        Deposit[]
+  users           User[]
+
+  @@map("tenants")
+}
+
+model User {
+  id         String     @id @default(uuid()) @db.Uuid
+  tenantId   String     @map("tenant_id") @db.Uuid
+  username   String     @db.VarChar(50)
+  password   String     @db.VarChar(255)
+  role       UserRole
+  createdAt  DateTime   @default(now()) @map("created_at")
+  updatedAt  DateTime   @updatedAt @map("updated_at")
+  deletedAt  DateTime?  @map("deleted_at")
+  deletedBy  String?    @map("deleted_by") @db.Uuid
+  restoredAt DateTime?  @map("restored_at")
+  restoredBy String?    @map("restored_by") @db.Uuid
+  admin      AdminBank?
+  customer   Customer?
+  tenant     Tenant     @relation(fields: [tenantId], references: [id])
+
+  @@unique([tenantId, username])
+  @@index([tenantId, role])
+  @@map("users")
+}
+
+model Customer {
+  id           String            @id @default(uuid()) @db.Uuid
+  tenantId     String            @map("tenant_id") @db.Uuid
+  userId       String            @unique @map("user_id") @db.Uuid
+  name         String            @map("nama_nasabah") @db.VarChar(100)
+  address      String
+  phone        String            @db.VarChar(20)
+  pointBalance Decimal           @default(0) @map("saldo_poin") @db.Decimal(14, 2)
+  photo        String?           @db.VarChar(255)
+  createdAt    DateTime          @default(now()) @map("created_at")
+  updatedAt    DateTime          @updatedAt @map("updated_at")
+  deletedAt    DateTime?         @map("deleted_at")
+  deletedBy    String?           @map("deleted_by") @db.Uuid
+  restoredAt   DateTime?         @map("restored_at")
+  restoredBy   String?           @map("restored_by") @db.Uuid
+  tenant       Tenant            @relation(fields: [tenantId], references: [id])
+  user         User              @relation(fields: [userId], references: [id])
+  redemptions  PointRedemption[]
+  deposits     Deposit[]
+
+  @@index([tenantId, name])
+  @@map("nasabah")
+}
+
+model AdminBank {
+  id          String    @id @default(uuid()) @db.Uuid
+  tenantId    String    @map("tenant_id") @db.Uuid
+  userId      String    @unique @map("user_id") @db.Uuid
+  unitName    String    @map("nama_unit") @db.VarChar(100)
+  managerName String    @map("nama_pengelola") @db.VarChar(100)
+  phone       String    @db.VarChar(20)
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+  deletedAt   DateTime? @map("deleted_at")
+  deletedBy   String?   @map("deleted_by") @db.Uuid
+  restoredAt  DateTime? @map("restored_at")
+  restoredBy  String?   @map("restored_by") @db.Uuid
+  tenant      Tenant    @relation(fields: [tenantId], references: [id])
+  user        User      @relation(fields: [userId], references: [id])
+  deposits    Deposit[]
+
+  @@index([tenantId, unitName])
+  @@map("admin_bank")
+}
+
+model WasteCategory {
+  id         String          @id @default(uuid()) @db.Uuid
+  tenantId   String          @map("tenant_id") @db.Uuid
+  name       String          @map("nama_kategori") @db.VarChar(100)
+  pricePerKg Decimal         @map("harga_per_kg") @db.Decimal(14, 2)
+  pointPerKg Decimal         @map("poin_per_kg") @db.Decimal(14, 2)
+  type       WasteType       @map("jenis")
+  photo      String?         @db.VarChar(255)
+  createdAt  DateTime        @default(now()) @map("created_at")
+  updatedAt  DateTime        @updatedAt @map("updated_at")
+  deletedAt  DateTime?       @map("deleted_at")
+  deletedBy  String?         @map("deleted_by") @db.Uuid
+  restoredAt DateTime?       @map("restored_at")
+  restoredBy String?         @map("restored_by") @db.Uuid
+  details    DepositDetail[]
+  tenant     Tenant          @relation(fields: [tenantId], references: [id])
+
+  @@unique([tenantId, name])
+  @@index([tenantId, type])
+  @@map("kategori_sampah")
+}
+
+model Deposit {
+  id           String          @id @default(uuid()) @db.Uuid
+  tenantId     String          @map("tenant_id") @db.Uuid
+  customerId   String          @map("nasabah_id") @db.Uuid
+  adminId      String?         @map("admin_id") @db.Uuid
+  kodeSetor    String          @map("kode_setor") @db.VarChar(30)
+  catatan      String?
+  catatanAdmin String?         @map("catatan_admin")
+  depositedAt  DateTime        @default(now()) @map("tanggal")
+  status       DepositStatus
+  createdAt    DateTime        @default(now()) @map("created_at")
+  updatedAt    DateTime        @updatedAt @map("updated_at")
+  deletedAt    DateTime?       @map("deleted_at")
+  deletedBy    String?         @map("deleted_by") @db.Uuid
+  restoredAt   DateTime?       @map("restored_at")
+  restoredBy   String?         @map("restored_by") @db.Uuid
+  details      DepositDetail[]
+  admin        AdminBank?      @relation(fields: [adminId], references: [id], onDelete: Restrict)
+  customer     Customer        @relation(fields: [customerId], references: [id])
+  tenant       Tenant          @relation(fields: [tenantId], references: [id])
+
+  @@unique([tenantId, kodeSetor])
+  @@index([tenantId, status])
+  @@index([customerId, depositedAt])
+  @@map("setor_sampah")
+}
+
+model DepositDetail {
+  id            String        @id @default(uuid()) @db.Uuid
+  depositId     String        @map("setoran_id") @db.Uuid
+  categoryId    String        @map("kategori_sampah_id") @db.Uuid
+  weightKg      Decimal       @map("berat_kg") @db.Decimal(10, 3)
+  weightKgReal  Decimal?      @map("berat_kg_real") @db.Decimal(10, 3)
+  subtotalPoint Decimal       @map("subtotal_poin") @db.Decimal(14, 2)
+  createdAt     DateTime      @default(now()) @map("created_at")
+  updatedAt     DateTime      @updatedAt @map("updated_at")
+  deletedAt     DateTime?     @map("deleted_at")
+  deletedBy     String?       @map("deleted_by") @db.Uuid
+  restoredAt    DateTime?     @map("restored_at")
+  restoredBy    String?       @map("restored_by") @db.Uuid
+  category      WasteCategory @relation(fields: [categoryId], references: [id])
+  deposit       Deposit       @relation(fields: [depositId], references: [id])
+
+  @@index([depositId])
+  @@index([categoryId])
+  @@map("detail_setor")
+}
+
+model Reward {
+  id             String            @id @default(uuid()) @db.Uuid
+  tenantId       String            @map("tenant_id") @db.Uuid
+  name           String            @map("nama_hadiah") @db.VarChar(100)
+  pointsRequired Decimal           @map("poin_dibutuhkan") @db.Decimal(14, 2)
+  stock          Int               @default(0)
+  photo          String?           @db.VarChar(255)
+  createdAt      DateTime          @default(now()) @map("created_at")
+  updatedAt      DateTime          @updatedAt @map("updated_at")
+  deletedAt      DateTime?         @map("deleted_at")
+  deletedBy      String?           @map("deleted_by") @db.Uuid
+  restoredAt     DateTime?         @map("restored_at")
+  restoredBy     String?           @map("restored_by") @db.Uuid
+  tenant         Tenant            @relation(fields: [tenantId], references: [id])
+  redemptions    PointRedemption[]
+
+  @@unique([tenantId, name])
+  @@index([tenantId, stock])
+  @@map("hadiah")
+}
+
+model PointRedemption {
+  id            String           @id @default(uuid()) @db.Uuid
+  tenantId      String           @map("tenant_id") @db.Uuid
+  rewardId      String           @map("hadiah_id") @db.Uuid
+  kodePenukaran String           @map("kode_penukaran") @db.VarChar(30)
+  redeemedAt    DateTime         @default(now()) @map("tanggal")
+  pointsUsed    Decimal          @map("poin_terpakai") @db.Decimal(14, 2)
+  status        RedemptionStatus
+  createdAt     DateTime         @default(now()) @map("created_at")
+  updatedAt     DateTime         @updatedAt @map("updated_at")
+  deletedAt     DateTime?        @map("deleted_at")
+  deletedBy     String?          @map("deleted_by") @db.Uuid
+  restoredAt    DateTime?        @map("restored_at")
+  restoredBy    String?          @map("restored_by") @db.Uuid
+  customerId    String           @map("nasabah_id") @db.Uuid
+  reward        Reward           @relation(fields: [rewardId], references: [id])
+  customer      Customer         @relation(fields: [customerId], references: [id])
+  tenant        Tenant           @relation(fields: [tenantId], references: [id])
+
+  @@unique([tenantId, kodePenukaran])
+  @@index([tenantId, status])
+  @@index([rewardId, redeemedAt])
+  @@index([customerId, redeemedAt])
+  @@map("penukaran_poin")
+}
+
+enum UserRole {
+  ADMIN_BANK
+  NASABAH
+}
+
+enum WasteType {
+  PLASTIK
+  KERTAS
+  LOGAM
+  KACA
+}
+
+enum DepositStatus {
+  BELUM_DIKONFIRMASI
+  DIVERIFIKASI
+  SELESAI
+  DITOLAK
+}
+
+enum RedemptionStatus {
+  DIPROSES
+  SELESAI
+}
