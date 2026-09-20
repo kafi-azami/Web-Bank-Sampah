@@ -10,11 +10,11 @@ function getCurrentMonth() {
   return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
 }
 
-const JENIS_LABEL: Record<string, { label: string; color: string }> = {
-  plastik: { label: 'Plastik', color: 'bg-blue-500' },
-  kertas: { label: 'Kertas', color: 'bg-amber-500' },
-  logam: { label: 'Logam', color: 'bg-gray-500' },
-  kaca: { label: 'Kaca', color: 'bg-cyan-500' },
+const JENIS_LABEL: Record<string, { label: string; gradient: string }> = {
+  plastik: { label: 'Plastik', gradient: 'from-aqua to-violet' },
+  kertas: { label: 'Kertas', gradient: 'from-violet to-emerald' },
+  logam: { label: 'Logam', gradient: 'from-white/40 to-white/10' },
+  kaca: { label: 'Kaca', gradient: 'from-emerald to-aqua' },
 };
 
 export default function RekapitulasiPage() {
@@ -53,22 +53,33 @@ export default function RekapitulasiPage() {
     : 1;
 
   return (
-    <div>
+    <div className="hud-grid -m-8 min-h-full p-8">
+      <div className="mb-2 flex items-center gap-2">
+        <span className="relative flex h-2 w-2">
+          <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald opacity-75" />
+          <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald" />
+        </span>
+        <span className="tech-chip text-emerald">Module: Monthly Analytics</span>
+      </div>
+
       <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-800">Rekapitulasi Bulanan</h1>
-          <p className="text-gray-500">Laporan tonase sampah & penukaran poin</p>
+        <div className="relative">
+          <div className="pointer-events-none absolute -left-4 -top-4 h-24 w-24 rounded-full bg-aqua/30 blur-2xl" />
+          <h1 className="relative font-display text-3xl font-bold bg-gradient-to-r from-white via-aqua to-white bg-clip-text text-transparent drop-shadow-[0_0_20px_rgba(56,189,248,0.35)]">
+            Rekapitulasi Bulanan
+          </h1>
+          <p className="relative mt-1 text-white/40">Laporan tonase sampah & penukaran poin</p>
         </div>
         <div className="flex items-center gap-2">
           <input
             type="month"
             value={bulan}
             onChange={(e) => setBulan(e.target.value)}
-            className="rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-green-500 focus:outline-none"
+            className="rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm text-white focus:border-aqua focus:outline-none"
           />
           <button
             onClick={loadData}
-            className="rounded-md border border-gray-300 p-2 text-gray-500 hover:bg-gray-100"
+            className="rounded-xl border border-white/10 bg-white/5 p-2 text-white/50 hover:text-aqua"
           >
             <RefreshCw className="h-4 w-4" />
           </button>
@@ -76,65 +87,63 @@ export default function RekapitulasiPage() {
       </div>
 
       {loading ? (
-        <p className="text-center text-gray-400">Memuat data...</p>
+        <p className="text-center text-white/30">Memuat data...</p>
       ) : error ? (
-        <p className="text-center text-red-500">{error}</p>
+        <p className="text-center text-red-400">{error}</p>
       ) : data ? (
         <div className="space-y-6">
-          {/* Summary Cards */}
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-            <div className="flex items-center gap-4 rounded-xl bg-white p-5 shadow-sm">
-              <div className="rounded-lg bg-purple-500 p-3 text-white">
-                <Scale className="h-6 w-6" />
+            <div className="hud-corners glass-dark flex items-center gap-4 p-5">
+              <div className="relative flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-violet to-aqua">
+                <Scale className="h-6 w-6 text-white" />
               </div>
               <div>
-                <p className="text-sm text-gray-500">Total Tonase</p>
-                <p className="text-2xl font-bold text-gray-800">
+                <p className="tech-chip text-white/40">Total Tonase</p>
+                <p className="font-display text-2xl font-bold text-white">
                   {data.rekapitulasiTonase.totalKg} kg
                 </p>
               </div>
             </div>
-            <div className="flex items-center gap-4 rounded-xl bg-white p-5 shadow-sm">
-              <div className="rounded-lg bg-green-500 p-3 text-white">
-                <Wallet className="h-6 w-6" />
+            <div className="hud-corners glass-dark flex items-center gap-4 p-5">
+              <div className="relative flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-emerald to-aqua">
+                <Wallet className="h-6 w-6 text-white" />
               </div>
               <div>
-                <p className="text-sm text-gray-500">Estimasi Pembayaran</p>
-                <p className="text-2xl font-bold text-gray-800">
+                <p className="tech-chip text-white/40">Estimasi Pembayaran</p>
+                <p className="font-display text-2xl font-bold text-white">
                   Rp {data.rekapitulasiTonase.totalEstimasiPembayaranRupiah.toLocaleString('id-ID')}
                 </p>
               </div>
             </div>
-            <div className="flex items-center gap-4 rounded-xl bg-white p-5 shadow-sm">
-              <div className="rounded-lg bg-amber-500 p-3 text-white">
-                <Coins className="h-6 w-6" />
+            <div className="hud-corners glass-dark flex items-center gap-4 p-5">
+              <div className="relative flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-aqua to-violet">
+                <Coins className="h-6 w-6 text-white" />
               </div>
               <div>
-                <p className="text-sm text-gray-500">Poin Diterbitkan</p>
-                <p className="text-2xl font-bold text-gray-800">
+                <p className="tech-chip text-white/40">Poin Diterbitkan</p>
+                <p className="font-display text-2xl font-bold text-white">
                   {data.rekapitulasiTonase.totalPoinDiterbitkan}
                 </p>
               </div>
             </div>
           </div>
 
-          {/* Breakdown per Jenis */}
-          <div className="rounded-xl bg-white p-6 shadow-sm">
-            <h3 className="mb-4 font-semibold text-gray-800">Breakdown per Jenis Sampah</h3>
+          <div className="hud-corners glass-dark p-6">
+            <h3 className="mb-4 font-display font-semibold text-white">Breakdown per Jenis Sampah</h3>
             <div className="space-y-4">
               {Object.entries(data.breakdownJenisSampah).map(([jenis, value]) => (
                 <div key={jenis}>
                   <div className="mb-1 flex items-center justify-between text-sm">
-                    <span className="font-medium text-gray-700">
+                    <span className="font-medium text-white/70">
                       {JENIS_LABEL[jenis]?.label || jenis}
                     </span>
-                    <span className="text-gray-500">
+                    <span className="text-white/40">
                       {value.tonaseKg} kg · Rp {value.rupiah.toLocaleString('id-ID')} · {value.poin} poin
                     </span>
                   </div>
-                  <div className="h-2 w-full overflow-hidden rounded-full bg-gray-100">
+                  <div className="h-2 w-full overflow-hidden rounded-full bg-white/5">
                     <div
-                      className={`h-full ${JENIS_LABEL[jenis]?.color || 'bg-gray-400'}`}
+                      className={`h-full bg-gradient-to-r ${JENIS_LABEL[jenis]?.gradient || 'from-white/30 to-white/10'}`}
                       style={{ width: `${(value.tonaseKg / maxTonase) * 100}%` }}
                     />
                   </div>
@@ -143,19 +152,18 @@ export default function RekapitulasiPage() {
             </div>
           </div>
 
-          {/* Rekap Penukaran Poin */}
-          <div className="rounded-xl bg-white p-6 shadow-sm">
-            <h3 className="mb-4 font-semibold text-gray-800">Rekapitulasi Penukaran Poin</h3>
+          <div className="hud-corners glass-dark p-6">
+            <h3 className="mb-4 font-display font-semibold text-white">Rekapitulasi Penukaran Poin</h3>
             <div className="grid grid-cols-2 gap-4">
-              <div className="rounded-lg bg-gray-50 p-4">
-                <p className="text-sm text-gray-500">Total Transaksi</p>
-                <p className="text-xl font-bold text-gray-800">
+              <div className="rounded-xl bg-white/5 p-4">
+                <p className="tech-chip text-white/40">Total Transaksi</p>
+                <p className="font-display text-xl font-bold text-white">
                   {data.rekapitulasiPenukaranPoin.totalTransaksiPenukaran}
                 </p>
               </div>
-              <div className="rounded-lg bg-gray-50 p-4">
-                <p className="text-sm text-gray-500">Total Poin Terpakai</p>
-                <p className="text-xl font-bold text-gray-800">
+              <div className="rounded-xl bg-white/5 p-4">
+                <p className="tech-chip text-white/40">Total Poin Terpakai</p>
+                <p className="font-display text-xl font-bold text-white">
                   {data.rekapitulasiPenukaranPoin.totalPoinTerpakai}
                 </p>
               </div>

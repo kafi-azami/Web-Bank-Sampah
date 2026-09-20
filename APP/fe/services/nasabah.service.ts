@@ -11,13 +11,13 @@ export async function getNasabahById(id: string) {
   return res.data.data;
 }
 
-export async function createNasabah(payload: CreateNasabahPayload) {
-  const res = await apiClient.post<ApiResponse<Nasabah>>('/admin/nasabah', payload);
+export async function createNasabah(formData: FormData) {
+  const res = await apiClient.post<ApiResponse<Nasabah>>('/admin/nasabah', formData);
   return res.data.data;
 }
 
-export async function updateNasabah(id: string, payload: UpdateNasabahPayload) {
-  const res = await apiClient.put<ApiResponse<Nasabah>>(`/admin/nasabah/${id}`, payload);
+export async function updateNasabah(id: string, formData: FormData) {
+  const res = await apiClient.put<ApiResponse<Nasabah>>(`/admin/nasabah/${id}`, formData);
   return res.data.data;
 }
 

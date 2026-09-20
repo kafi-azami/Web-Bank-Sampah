@@ -43,3 +43,18 @@ export async function getMyPenukaran() {
   const res = await apiClient.get<ApiResponse<MyPenukaranItem[]>>('/penukaran-poin/my-penukaran');
   return res.data.data;
 }
+
+export interface NotaPenukaran {
+  id: string;
+  kodePenukaran: string;
+  tanggal: string;
+  nasabah: { namaNasabah: string; telp: string };
+  hadiah: { namaHadiah: string; poinDibutuhkan: number };
+  poinTerpakai: number;
+  status: string;
+}
+
+export async function getNotaPenukaran(id: string) {
+  const res = await apiClient.get<ApiResponse<NotaPenukaran>>(`/penukaran-poin/nota/${id}`);
+  return res.data.data;
+}

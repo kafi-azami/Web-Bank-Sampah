@@ -6,13 +6,13 @@ export async function getAllKategori() {
   return res.data.data;
 }
 
-export async function createKategori(payload: CreateKategoriPayload) {
-  const res = await apiClient.post<ApiResponse<KategoriSampah>>('/kategori-sampah', payload);
+export async function createKategori(formData: FormData) {
+  const res = await apiClient.post<ApiResponse<KategoriSampah>>('/kategori-sampah', formData);
   return res.data.data;
 }
 
-export async function updateKategori(id: string, payload: UpdateKategoriPayload) {
-  const res = await apiClient.put<ApiResponse<KategoriSampah>>(`/kategori-sampah/${id}`, payload);
+export async function updateKategori(id: string, formData: FormData) {
+  const res = await apiClient.put<ApiResponse<KategoriSampah>>(`/kategori-sampah/${id}`, formData);
   return res.data.data;
 }
 

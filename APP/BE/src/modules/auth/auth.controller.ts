@@ -1,19 +1,25 @@
-import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, Req, UseGuards, UseInterceptors, UploadedFile } from '@nestjs/common';
 import { AuthService } from './auth.service.js';
 import { RegisterNasabahDto } from './dto/register-nasabah.dto.js';
 import { RegisterAdminDto } from './dto/register-admin.dto.js';
 import { LoginUserDto } from './dto/login-user.dto.js';
 import { AppKeyGuard } from '../../shared/guards/app-key.guard.js';
 import { UserAuthGuard } from '../../shared/guards/user-auth.guard.js';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('auth')
-@UseGuards(AppKeyGuard) // semua endpoint di sini wajib x-app-key
+@UseGuards(AppKeyGuard)
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('nasabah/register')
-  registerNasabah(@Req() req: any, @Body() dto: RegisterNasabahDto) {
-    return this.authService.registerNasabah(req.tenant.id, dto);
+  @UseInterceptors(FileInterceptor('foto'))
+  registerNasabah(
+    @Req() req: any, 
+    @Body() dto: RegisterNasabahDto, 
+    @UploadedFile() foto?: Express.Multer.File
+  ) {
+    return this.authService.registerNasabah(req.tenant.id, dto, foto);
   }
 
   @Post('admin/register')

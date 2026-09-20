@@ -3,11 +3,13 @@ import { PrismaService } from '../../prisma/prisma.service.js';
 import { CreateNasabahDto } from './dto/create-nasabah.dto.js';
 import { UpdateNasabahDto } from './dto/update-nasabah.dto.js';
 import { HashingService } from '../../shared/hashing/hashing.service.js';
+import { CloudinaryService } from '../../shared/cloudinary/cloudinary.service.js';
 
 @Injectable()
 export class AdminNasabahService {constructor(
     private readonly prisma: PrismaService,
     private readonly hashing: HashingService,
+    private readonly cloudinary: CloudinaryService,
   ) {}
 
   private toResponse(customer: any) {
@@ -44,58 +46,81 @@ export class AdminNasabahService {constructor(
     return this.toResponse(item);
   }
 
-  async create(tenantId: string, dto: CreateNasabahDto) {
-    const existing = await this.prisma.user.findUnique({
-      where: { tenantId_username: { tenantId, username: dto.username } },
-    });
-    if (existing) {
-      throw new BadRequestException(
-        'Username sudah digunakan pada database aplikasi Anda.',
-      );
-    }
-
-    const hashedPassword = await this.hashing.hash(dto.password);
-
-    const customer = await this.prisma.$transaction(async (tx) => {
-      const user = await tx.user.create({
-        data: {
-          tenantId,
-          username: dto.username,
-          password: hashedPassword,
-          role: 'NASABAH',
-        },
-      });
-
-      return tx.customer.create({
-        data: {
-          tenantId,
-          userId: user.id,
-          name: dto.namaNasabah,
-          address: dto.alamat,
-          phone: dto.telp,
-        },
-        include: { user: true },
-      });
-    });
-
-    return this.toResponse(customer);
+ async create(
+  tenantId: string,
+  dto: CreateNasabahDto,
+  foto?: Express.Multer.File,
+) {
+  const existing = await this.prisma.user.findUnique({
+    where: { tenantId_username: { tenantId, username: dto.username } },
+  });
+  if (existing) {
+    throw new BadRequestException(
+      'Username sudah digunakan pada database aplikasi Anda.',
+    );
   }
 
-  async update(tenantId: string, id: string, dto: UpdateNasabahDto) {
-    await this.findOne(tenantId, id); // pastikan ada & milik tenant ini
+  const hashedPassword = await this.hashing.hash(dto.password);
 
-    const customer = await this.prisma.customer.update({
-      where: { id },
+  let photoUrl: string | undefined;
+  if (foto) {
+    const result = await this.cloudinary.uploadImage(foto, 'nasabah');
+    photoUrl = result.secure_url;
+  }
+
+  const customer = await this.prisma.$transaction(async (tx) => {
+    const user = await tx.user.create({
       data: {
-        ...(dto.namaNasabah && { name: dto.namaNasabah }),
-        ...(dto.alamat && { address: dto.alamat }),
-        ...(dto.telp && { phone: dto.telp } as any),
+        tenantId,
+        username: dto.username,
+        password: hashedPassword,
+        role: 'NASABAH',
+      },
+    });
+
+    return tx.customer.create({
+      data: {
+        tenantId,
+        userId: user.id,
+        name: dto.namaNasabah,
+        address: dto.alamat,
+        phone: dto.telp,
+        photo: photoUrl,
       },
       include: { user: true },
     });
+  });
 
-    return this.toResponse(customer);
+  return this.toResponse(customer);
+}
+
+  async update(
+  tenantId: string,
+  id: string,
+  dto: UpdateNasabahDto,
+  foto?: Express.Multer.File,
+) {
+  await this.findOne(tenantId, id);
+
+  let photoUrl: string | undefined;
+  if (foto) {
+    const result = await this.cloudinary.uploadImage(foto, 'nasabah');
+    photoUrl = result.secure_url;
   }
+
+  const customer = await this.prisma.customer.update({
+    where: { id },
+    data: {
+      ...(dto.namaNasabah && { name: dto.namaNasabah }),
+      ...(dto.alamat && { address: dto.alamat }),
+      ...(dto.telp && { phone: dto.telp }),
+      ...(photoUrl && { photo: photoUrl }),
+    },
+    include: { user: true },
+  });
+
+  return this.toResponse(customer);
+}
 
   async remove(tenantId: string, id: string, deletedBy: string) {
     await this.findOne(tenantId, id);

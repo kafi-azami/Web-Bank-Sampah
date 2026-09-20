@@ -6,13 +6,13 @@ export async function getAllHadiah() {
   return res.data.data;
 }
 
-export async function createHadiah(payload: CreateHadiahPayload) {
-  const res = await apiClient.post<ApiResponse<Hadiah>>('/hadiah', payload);
+export async function createHadiah(formData: FormData) {
+  const res = await apiClient.post<ApiResponse<Hadiah>>('/hadiah', formData);
   return res.data.data;
 }
 
-export async function updateHadiah(id: string, payload: UpdateHadiahPayload) {
-  const res = await apiClient.put<ApiResponse<Hadiah>>(`/hadiah/${id}`, payload);
+export async function updateHadiah(id: string, formData: FormData) {
+  const res = await apiClient.put<ApiResponse<Hadiah>>(`/hadiah/${id}`, formData);
   return res.data.data;
 }
 

@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param, Delete, Put, Req, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, Put, Req, UseGuards, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { AdminNasabahService } from './admin-nasabah.service.js';
 import { CreateNasabahDto } from './dto/create-nasabah.dto.js';
 import { UpdateNasabahDto } from './dto/update-nasabah.dto.js';
@@ -6,6 +6,7 @@ import { AppKeyGuard } from '../../shared/guards/app-key.guard.js';
 import { UserAuthGuard } from '../../shared/guards/user-auth.guard.js';
 import { RolesGuard } from '../../shared/guards/roles.guard.js';
 import { Roles } from '../../shared/decorators/roles.decorator.js';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('admin/nasabah')
 @UseGuards(AppKeyGuard, UserAuthGuard, RolesGuard)
@@ -24,13 +25,24 @@ export class AdminNasabahController {
   }
 
   @Post()
-  create(@Req() req: any, @Body() dto: CreateNasabahDto) {
-    return this.service.create(req.tenant.id, dto);
+  @UseInterceptors(FileInterceptor('foto'))
+  create(
+    @Req() req: any, 
+    @Body() dto: CreateNasabahDto, 
+    @UploadedFile() foto?: Express.Multer.File
+  ) {
+    return this.service.create(req.tenant.id, dto, foto);
   }
 
   @Put(':id')
-  update(@Req() req: any, @Param('id') id: string, @Body() dto: UpdateNasabahDto) {
-    return this.service.update(req.tenant.id, id, dto);
+  @UseInterceptors(FileInterceptor('foto'))
+  update(
+    @Req() req: any, 
+    @Param('id') id: string, 
+    @Body() dto: UpdateNasabahDto,
+    @UploadedFile() foto?: Express.Multer.File
+  ) {
+    return this.service.update(req.tenant.id, id, dto, foto);
   }
 
   @Delete(':id')

@@ -78,31 +78,41 @@ export default function SetorPage() {
 
   if (success) {
     return (
-      <div className="flex flex-col items-center justify-center py-16 text-center">
-        <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-green-100">
-          <Send className="h-8 w-8 text-green-600" />
+      <div className="flex flex-col items-center justify-center py-20 text-center">
+        <div className="hud-corners mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-br from-emerald to-aqua shadow-lg shadow-emerald/30">
+          <Send className="h-9 w-9 text-white" />
         </div>
-        <h2 className="text-lg font-bold text-gray-800">Pengajuan Berhasil!</h2>
-        <p className="mt-1 text-sm text-gray-500">Mengalihkan ke halaman riwayat...</p>
+        <h2 className="font-display text-xl font-bold text-white">Pengajuan Berhasil!</h2>
+        <p className="mt-1 text-sm text-white/50">Mengalihkan ke halaman riwayat...</p>
       </div>
     );
   }
 
   return (
-    <div>
-      <h1 className="mb-1 text-xl font-bold text-gray-800">Ajukan Setoran</h1>
-      <p className="mb-6 text-sm text-gray-500">Pilih jenis sampah dan estimasi berat</p>
+    <div className="mx-auto max-w-2xl">
+      <div className="mb-2 flex items-center gap-2">
+        <span className="relative flex h-2 w-2">
+          <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-aqua opacity-75" />
+          <span className="relative inline-flex h-2 w-2 rounded-full bg-aqua" />
+        </span>
+        <span className="tech-chip text-aqua/80">New Deposit Request</span>
+      </div>
+
+      <div className="mb-6">
+        <h1 className="font-display text-3xl font-bold text-white">Ajukan Setoran</h1>
+        <p className="mt-1 text-white/50">Pilih jenis sampah dan estimasi berat</p>
+      </div>
 
       <form onSubmit={handleSubmit} className="space-y-4">
         {items.map((item, index) => (
-          <div key={index} className="rounded-xl bg-white p-4 shadow-sm">
+          <div key={index} className="glass-dark hud-corners p-4">
             <div className="mb-3 flex items-center justify-between">
-              <span className="text-sm font-medium text-gray-600">Sampah #{index + 1}</span>
+              <span className="tech-chip text-white/40">Sampah #{index + 1}</span>
               {items.length > 1 && (
                 <button
                   type="button"
                   onClick={() => removeItem(index)}
-                  className="text-red-500 hover:text-red-600"
+                  className="text-violet hover:text-violet/70"
                 >
                   <Trash2 className="h-4 w-4" />
                 </button>
@@ -114,11 +124,11 @@ export default function SetorPage() {
                 required
                 value={item.kategoriSampahId}
                 onChange={(e) => updateItem(index, 'kategoriSampahId', e.target.value)}
-                className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-green-500 focus:outline-none"
+                className="w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2.5 text-sm text-white focus:border-aqua focus:outline-none"
               >
-                <option value="">Pilih jenis sampah</option>
+                <option value="" className="bg-navy">Pilih jenis sampah</option>
                 {kategoriList.map((k) => (
-                  <option key={k.id} value={k.id}>
+                  <option key={k.id} value={k.id} className="bg-navy">
                     {k.namaKategori} ({k.poinPerKg} poin/kg)
                   </option>
                 ))}
@@ -132,7 +142,7 @@ export default function SetorPage() {
                 placeholder="Estimasi berat (kg)"
                 value={item.beratKg}
                 onChange={(e) => updateItem(index, 'beratKg', e.target.value)}
-                className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-green-500 focus:outline-none"
+                className="w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2.5 text-sm text-white placeholder:text-white/30 focus:border-aqua focus:outline-none"
               />
             </div>
           </div>
@@ -141,13 +151,13 @@ export default function SetorPage() {
         <button
           type="button"
           onClick={addItem}
-          className="flex w-full items-center justify-center gap-2 rounded-lg border-2 border-dashed border-gray-300 py-3 text-sm font-medium text-gray-500 hover:border-green-500 hover:text-green-600"
+          className="flex w-full items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-aqua/30 bg-white/5 py-3 text-sm font-medium text-white/40 hover:border-aqua hover:text-aqua"
         >
           <Plus className="h-4 w-4" /> Tambah Jenis Sampah
         </button>
 
-        <div>
-          <label className="mb-1 block text-sm font-medium text-gray-700">
+        <div className="glass-dark hud-corners p-4">
+          <label className="mb-1 block text-sm font-medium text-white/60">
             Catatan (opsional)
           </label>
           <textarea
@@ -155,20 +165,24 @@ export default function SetorPage() {
             value={catatan}
             onChange={(e) => setCatatan(e.target.value)}
             placeholder="Contoh: Sampah sudah dipilah rapi"
-            className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-green-500 focus:outline-none"
+            className="w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm text-white placeholder:text-white/30 focus:border-aqua focus:outline-none"
           />
         </div>
 
-        <div className="rounded-lg bg-green-50 px-4 py-3 text-sm font-medium text-green-700">
+        <div className="rounded-2xl bg-gradient-to-r from-emerald to-aqua px-5 py-3.5 text-sm font-semibold text-white shadow-md shadow-emerald/20">
           Estimasi Poin: {estimasiPoin()} poin
         </div>
 
-        {error && <p className="text-sm text-red-600">{error}</p>}
+        {error && (
+          <div className="rounded-xl border border-red-500/30 bg-red-500/10 px-4 py-2.5 text-sm text-red-400">
+            {error}
+          </div>
+        )}
 
         <button
           type="submit"
           disabled={submitting}
-          className="w-full rounded-lg bg-green-600 py-3 font-medium text-white hover:bg-green-700 disabled:opacity-50"
+          className="btn-aero w-full rounded-2xl bg-gradient-to-r from-emerald via-aqua to-violet py-3.5 font-display font-semibold text-white shadow-lg shadow-aqua/20 transition hover:opacity-90 disabled:opacity-50"
         >
           {submitting ? 'Mengirim...' : 'Ajukan Setoran'}
         </button>
