@@ -1,9 +1,21 @@
 import Link from 'next/link';
-import { Recycle, Coins, Award, ArrowRight, Leaf } from 'lucide-react';
+import {
+  Recycle,
+  Coins,
+  Award,
+  ArrowRight,
+  Leaf,
+  ClipboardCheck,
+  TrendingUp,
+  ShieldCheck,
+  Users,
+  Droplets,
+  Wind,
+} from 'lucide-react';
 
 export default function HomePage() {
   return (
-    <div className="wavy-grid-bg relative min-h-screen overflow-hidden bg-navy">
+    <div className="hud-grid relative min-h-screen overflow-hidden bg-navy">
       {/* Glow orbs melayang */}
       <div className="pointer-events-none fixed -left-32 -top-32 h-96 w-96 rounded-full bg-aqua/15 blur-3xl" />
       <div className="pointer-events-none fixed -right-40 top-20 h-[28rem] w-[28rem] rounded-full bg-violet/15 blur-3xl" />
@@ -37,7 +49,7 @@ export default function HomePage() {
       </header>
 
       {/* Hero */}
-      <section className="relative z-10 mx-auto max-w-4xl px-6 py-24 text-center">
+      <section className="relative z-10 mx-auto max-w-4xl px-6 py-20 text-center">
         <div className="mb-3 flex items-center justify-center gap-2">
           <span className="relative flex h-2 w-2">
             <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald opacity-75" />
@@ -77,42 +89,253 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Features */}
+      {/* GAMBAR HERO */}
+      <section className="relative z-10 mx-auto max-w-5xl px-6 pb-20">
+        <div className="hud-corners overflow-hidden rounded-3xl border-2 border-dashed border-aqua/30 bg-white/5">
+          {/* Gamabar bank sampah */}
+          <img
+            src="/bank-sampah.jpg"
+            alt="Ilustrasi Bank Sampah Digital"
+            className="aspect-video w-full object-cover"
+          />
+        </div>
+      </section>
+
+      {/* Cara Kerja */}
       <section className="relative z-10 mx-auto max-w-5xl px-6 pb-24">
+        <div className="mb-12 text-center">
+          <span className="tech-chip text-aqua/70">Alur Sederhana</span>
+          <h2 className="mt-2 font-display text-3xl font-bold text-white">Cara Kerja</h2>
+          <p className="mx-auto mt-2 max-w-lg text-white/50">
+            Tiga langkah mudah untuk mulai mengubah sampahmu jadi nilai tambah
+          </p>
+        </div>
+
         <div className="grid gap-6 sm:grid-cols-3">
           <div className="glass-dark hud-corners p-7 text-center">
             <div className="relative mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-emerald to-aqua shadow-lg shadow-emerald/30">
-              <Recycle className="h-7 w-7 text-white" />
+              <ClipboardCheck className="h-7 w-7 text-white" />
             </div>
-            <h3 className="mb-2 font-display font-semibold text-white">Setor Sampah</h3>
+            <p className="tech-chip mb-2 text-aqua/60">Langkah 1</p>
+            <h3 className="mb-2 font-display font-semibold text-white">Daftar & Pilah Sampah</h3>
             <p className="text-sm text-white/40">
-              Ajukan penyetoran sampah daur ulang kapan saja, tim kami yang
-              proses.
+              Buat akun nasabah, lalu pilah sampah daur ulangmu berdasarkan
+              jenisnya (plastik, kertas, logam, kaca).
             </p>
           </div>
 
           <div className="glass-dark hud-corners p-7 text-center">
             <div className="relative mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-aqua to-violet shadow-lg shadow-aqua/30">
-              <Coins className="h-7 w-7 text-white" />
+              
+              <Recycle className="h-7 w-7 text-white" />
             </div>
-            <h3 className="mb-2 font-display font-semibold text-white">Kumpulkan Poin</h3>
+            <p className="tech-chip mb-2 text-aqua/60">Langkah 2</p>
+            <h3 className="mb-2 font-display font-semibold text-white">Setorkan Sampahmu</h3>
             <p className="text-sm text-white/40">
-              Setiap kilogram sampah yang disetor dikonversi otomatis jadi
-              poin.
+              Ajukan penyetoran lewat aplikasi, tim kami akan menimbang dan
+              memverifikasi berat sampah yang kamu setor.
             </p>
           </div>
 
           <div className="glass-dark hud-corners p-7 text-center">
             <div className="relative mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-violet to-emerald shadow-lg shadow-violet/30">
-
+              
               <Award className="h-7 w-7 text-white" />
             </div>
-            <h3 className="mb-2 font-display font-semibold text-white">Tukar Hadiah</h3>
+            <p className="tech-chip mb-2 text-aqua/60">Langkah 3</p>
+            <h3 className="mb-2 font-display font-semibold text-white">Kumpulkan & Tukar Poin</h3>
             <p className="text-sm text-white/40">
-              Tukarkan poinmu dengan voucher, sembako, dan hadiah menarik
-              lainnya.
+              Setiap kilogram sampah dikonversi otomatis jadi poin. Tukarkan
+              dengan voucher, sembako, atau hadiah lainnya.
             </p>
           </div>
+        </div>
+      </section>
+
+      {/* Fitur Utama */}
+      <section className="relative z-10 mx-auto max-w-5xl px-6 pb-24">
+        <div className="mb-12 text-center">
+          <span className="tech-chip text-violet/70">Fitur Unggulan</span>
+          <h2 className="mt-2 font-display text-3xl font-bold text-white">Apa yang Bisa Kamu Lakukan</h2>
+        </div>
+
+        <div className="grid gap-5 sm:grid-cols-2">
+          <div className="glass-dark hud-corners flex items-start gap-4 p-6">
+            <div className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-full bg-emerald/15 text-emerald">
+              <Recycle className="h-5 w-5" />
+            </div>
+            <div>
+              <h3 className="mb-1 font-display font-semibold text-white">Setor Sampah Kapan Saja</h3>
+              <p className="text-sm text-white/40">
+                Ajukan penyetoran sampah daur ulang langsung dari aplikasi,
+                lengkap dengan status real-time (menunggu, diverifikasi,
+                selesai).
+              </p>
+            </div>
+          </div>
+
+          <div className="glass-dark hud-corners flex items-start gap-4 p-6">
+            <div className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-full bg-aqua/15 text-aqua">
+              <Coins className="h-5 w-5" />
+            </div>
+            <div>
+              <h3 className="mb-1 font-display font-semibold text-white">Sistem Poin Otomatis</h3>
+              <p className="text-sm text-white/40">
+                Setiap kilogram sampah yang disetor langsung dikonversi jadi
+                poin sesuai jenis dan bobotnya — tidak perlu hitung manual.
+              </p>
+            </div>
+          </div>
+
+          <div className="glass-dark hud-corners flex items-start gap-4 p-6">
+            <div className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-full bg-violet/15 text-violet">
+              <Award className="h-5 w-5" />
+            </div>
+            <div>
+              <h3 className="mb-1 font-display font-semibold text-white">Katalog Hadiah Menarik</h3>
+              <p className="text-sm text-white/40">
+                Tukarkan poin dengan berbagai voucher, sembako, dan barang
+                kebutuhan sehari-hari langsung dari katalog.
+              </p>
+            </div>
+          </div>
+
+          <div className="glass-dark hud-corners flex items-start gap-4 p-6">
+            <div className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-full bg-emerald/15 text-emerald">
+              <ClipboardCheck className="h-5 w-5" />
+            </div>
+            <div>
+              <h3 className="mb-1 font-display font-semibold text-white">Riwayat & Nota Digital</h3>
+              <p className="text-sm text-white/40">
+                Pantau seluruh riwayat transaksi setoran dan penukaran poin,
+                lengkap dengan bukti nota yang bisa dicetak.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Keunggulan + Gambar */}
+      <section className="relative z-10 mx-auto max-w-5xl px-6 pb-24">
+        <div className="grid items-center gap-10 lg:grid-cols-2">
+          <div>
+            <span className="tech-chip text-emerald/70">Kenapa Bank Sampah?</span>
+            <h2 className="mt-2 mb-6 font-display text-3xl font-bold text-white">
+              Keunggulan Menabung Sampah
+            </h2>
+
+            <div className="space-y-5">
+              <div className="flex items-start gap-3">
+                <ShieldCheck className="mt-0.5 h-5 w-5 flex-shrink-0 text-emerald" />
+                <div>
+                  <h4 className="font-medium text-white">Transparan & Terpercaya</h4>
+                  <p className="text-sm text-white/40">
+                    Setiap transaksi tercatat digital dan bisa dipantau langsung
+                    oleh nasabah, tanpa manipulasi data.
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-start gap-3">
+                <TrendingUp className="mt-0.5 h-5 w-5 flex-shrink-0 text-aqua" />
+                <div>
+                  <h4 className="font-medium text-white">Nilai Ekonomi Nyata</h4>
+                  <p className="text-sm text-white/40">
+                    Sampah yang biasanya dibuang kini punya nilai tukar, bisa
+                    jadi tambahan penghasilan rumah tangga.
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-start gap-3">
+                <Users className="mt-0.5 h-5 w-5 flex-shrink-0 text-violet" />
+                <div>
+                  <h4 className="font-medium text-white">Mudah untuk Semua Kalangan</h4>
+                  <p className="text-sm text-white/40">
+                    Antarmuka sederhana, bisa digunakan siswa, ibu rumah
+                    tangga, hingga pelaku usaha kecil.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Gambar */}
+          <div className="hud-corners overflow-hidden rounded-3xl border-2 border-dashed border-emerald/30 bg-white/5">
+            <img
+              src="/sampah.jpg"
+              alt="Kegiatan penyetoran sampah"
+              className="aspect-square w-full object-cover"
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* Dampak Positif */}
+      <section className="relative z-10 mx-auto max-w-5xl px-6 pb-24">
+        <div className="mb-12 text-center">
+          <span className="tech-chip text-aqua/70">Dampak Nyata</span>
+          <h2 className="mt-2 font-display text-3xl font-bold text-white">
+            Dampak Positif Bagi Lingkungan
+          </h2>
+          <p className="mx-auto mt-2 max-w-lg text-white/50">
+            Setiap kilogram sampah yang kamu setor berkontribusi pada bumi
+            yang lebih bersih
+          </p>
+        </div>
+
+        <div className="grid gap-5 sm:grid-cols-3">
+          <div className="glass-dark hud-corners p-6 text-center">
+            <div className="relative mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-emerald to-aqua">
+              <Leaf className="h-6 w-6 text-white" />
+            </div>
+            <h3 className="mb-2 font-display font-semibold text-white">Kurangi Sampah TPA</h3>
+            <p className="text-sm text-white/40">
+              Sampah daur ulang yang terkumpul tidak berakhir menumpuk di
+              tempat pembuangan akhir, memperpanjang usia TPA.
+            </p>
+          </div>
+
+          <div className="glass-dark hud-corners p-6 text-center">
+            <div className="relative mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-aqua to-violet">
+              <Droplets className="h-6 w-6 text-white" />
+            </div>
+            <h3 className="mb-2 font-display font-semibold text-white">Jaga Kebersihan Air</h3>
+            <p className="text-sm text-white/40">
+              Mengurangi sampah plastik yang mencemari sungai dan laut,
+              menjaga ekosistem perairan tetap sehat.
+            </p>
+          </div>
+
+          <div className="glass-dark hud-corners p-6 text-center">
+            <div className="relative mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-violet to-emerald">
+              <Wind className="h-6 w-6 text-white" />
+            </div>
+            <h3 className="mb-2 font-display font-semibold text-white">Udara Lebih Bersih</h3>
+            <p className="text-sm text-white/40">
+              Daur ulang mengurangi kebutuhan pembakaran sampah yang
+              menghasilkan polusi udara dan gas rumah kaca.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Akhir */}
+      <section className="relative z-10 mx-auto max-w-3xl px-6 pb-24 text-center">
+        <div className="hud-corners glass-dark p-10">
+          <h2 className="font-display text-2xl font-bold text-white sm:text-3xl">
+            Siap Mulai Menabung Sampah?
+          </h2>
+          <p className="mx-auto mt-2 max-w-md text-white/50">
+            Bergabunglah sekarang dan jadilah bagian dari gerakan peduli
+            lingkungan sambil mendapatkan keuntungan.
+          </p>
+          <Link
+            href="/sign-up"
+            className="btn-aero mt-6 inline-flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-emerald via-aqua to-violet px-7 py-3.5 font-display font-semibold text-white shadow-lg shadow-aqua/30 transition hover:opacity-90"
+          >
+            Daftar Sekarang <ArrowRight className="h-4 w-4" />
+          </Link>
         </div>
       </section>
 

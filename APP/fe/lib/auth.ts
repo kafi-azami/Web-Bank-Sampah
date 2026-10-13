@@ -1,7 +1,7 @@
 import Cookies from 'js-cookie';
 
 export function saveAuth(token: string, role: 'NASABAH' | 'ADMIN_BANK') {
-  Cookies.set('token', token, { expires: 1 }); // 1 hari, samakan dgn JWT_EXPIRES_IN
+  Cookies.set('token', token, { expires: 1 });
   Cookies.set('role', role, { expires: 1 });
 }
 

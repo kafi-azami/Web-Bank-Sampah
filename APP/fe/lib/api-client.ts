@@ -16,20 +16,17 @@ apiClient.interceptors.request.use((config) => {
   return config;
 });
 
-// Kalau token expired/invalid, otomatis logout & redirect ke login
 apiClient.interceptors.response.use(
   (response) => response,
   async (error) => {
     const config = error.config;
 
-    // Retry sekali kalau error 500 (kemungkinan koneksi DB terputus sesaat)
     if (error.response?.status === 500 && config && !config._retried) {
       config._retried = true;
       await new Promise((resolve) => setTimeout(resolve, 500));
       return apiClient(config);
     }
 
-    // Token expired/invalid -> otomatis logout & redirect ke login
     if (error.response?.status === 401) {
       Cookies.remove('token');
       Cookies.remove('role');
